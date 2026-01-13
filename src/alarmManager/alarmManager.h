@@ -3,8 +3,8 @@
 //  All Rights Reserved
 //******************************************************************************
 //
-// Summary	: 
-// Note		: 
+// Summary	: Handle creatting thread fro alarm manager
+// Note		: None
 //
 //******************************************************************************
 
@@ -16,14 +16,14 @@
 #include <stdbool.h>
 
 //******************************* Global Types *********************************
-#define ALARM_MANAGER_SUCCESS	(0)
-#define ALARM_MANAGER_ON_TIME	(1)
-
+#define ALARM_MANAGER_SUCCESS		(0)
+#define ALARM_MANAGER_ON_TIME		(1)
+#define ALARM_MANAGER_ON_DISABLED	(0)
 
 //***************************** Global Constants *******************************
 
 //***************************** Global Variables *******************************
-
+extern uint32 ulCurrentTemperature;
 //**************************** Forward Declarations ****************************
 bool alarmMangerCreateThread(void);
 

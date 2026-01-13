@@ -25,7 +25,7 @@
 //***************************** Global Variables *******************************
 
 //**************************** Forward Declarations ****************************
-uint8 sensorTemperatureReadValue(void);
+bool sensorTemperatureReadValue(uint32 *pulCurrentTemperature);
 
 #endif // _SENSOR_H_
 // EOF

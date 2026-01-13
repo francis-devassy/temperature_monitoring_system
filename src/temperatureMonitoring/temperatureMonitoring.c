@@ -4,7 +4,7 @@
 //******************************************************************************
 //
 // File		: temperatureMonitoring.c
-// Summary	: 
+// Summary	: Handle thread to read temperature periodically
 // Note		: None
 // Author	: Francis V D
 // Date		: 01-January-2026
@@ -25,22 +25,29 @@
 //***************************** Local Constants ********************************
 
 //***************************** Local Variables ********************************
+uint32 ulCurrentTemperature = 0;
 
 //****************************** Local Functions *******************************
 
 //******************************.FUNCTION_HEADER.*******************************
-//Purpose	: Thread to read temperature every p second
-//Inputs	: None
+//Purpose	: Thread to read temperature periodically
+//Inputs	: void *pArg, pointer to thread arguments
 //Outputs	: None
-//Return	: 
+//Return	: None
 //Notes		: None
 //******************************************************************************
-static void* temperatureMonitoringThread(void  *pArg)
+static void* temperatureMonitoringThread(void *pArg)
 {
+	bool blReturn = false;
+
 	while(1)
 	{
-		ulCurrentTemperature = sensorTemperatureReadValue();
-		printf("\n Temperature : %lu",ulCurrentTemperature);
+		blReturn = sensorTemperatureReadValue(&ulCurrentTemperature);
+
+		if(blReturn == true)
+		{
+			printf("\n Temperature : %lu", ulCurrentTemperature);
+		}
 		sleep(TEMPERATURE_MONITORING_POLL_FREQ);
 	}
 
@@ -59,8 +66,9 @@ bool temperatureMonitoringCreateThread(void)
 {
 	bool blReturn = false;
 	pthread_t ultemperatureMonitoring = 0;
+
 	blReturn = pthread_create(&ultemperatureMonitoring, NULL,
-				temperatureMonitoringThread, NULL);
+			   temperatureMonitoringThread, NULL);
 	
 	if(blReturn == TEMPERATURE_MONITORING_SUCCESS)
 	{

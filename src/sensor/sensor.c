@@ -15,8 +15,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "sensor.h"
-
+#include "temperatureMonitoring.h"
 
 //******************************* Local Types **********************************
 
@@ -28,20 +29,30 @@
 
 //******************************.FUNCTION_HEADER.*******************************
 //Purpose	: To read the output from temperature sensor
-//Inputs	: None
+//Inputs	: uint32 *pulCurrentTemperature, pointer to variable where
+//			  temperature value is get stored
 //Outputs	: None
 //Return	: uint8 ucTemperature, measured temperature
 //******************************************************************************
-uint8 sensorTemperatureReadValue(void)
+bool sensorTemperatureReadValue(uint32 *pulCurrentTemperature)
 {
-	uint8 ucTemperature = 0;
+	bool blReturn = false;
 	uint32 ulTimeAsRandomSeed = 0;
 
 	ulTimeAsRandomSeed = time(NULL);
-	//srand(time(NULL));
 	srand(ulTimeAsRandomSeed);
-	ucTemperature = (rand() % SENSOR_TEMPERATURE_CALIBRATE);
+	*pulCurrentTemperature = ((rand() )% (SENSOR_TEMPERATURE_CALIBRATE));
 
-	return ucTemperature;
+	if((*pulCurrentTemperature >= SENSOR_TEMPERATURE_MIN) && 
+		(*pulCurrentTemperature <= SENSOR_TEMPERATURE_MAX))
+	{
+		blReturn = true;
+	}
+	else
+	{
+		printf("Unable to read sensor value\n");
+	}
+
+	return blReturn;
 }
 // EOF

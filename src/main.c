@@ -4,7 +4,7 @@
 //******************************************************************************
 //
 // File		: main.c
-// Summary	: 
+// Summary	: Temperature monitoring system execution begins from here
 // Note		: None
 // Author	: Francis V D
 // Date		: 02-January-2026
@@ -17,9 +17,6 @@
 #include "alarmManager.h"
 #include "temperatureMonitoring.h"
 
-//***************************** Global Variables *******************************
-uint32 ulCurrentTemperature = 0;
-
 //******************************* Local Types **********************************
 
 //***************************** Local Constants ********************************
@@ -29,7 +26,7 @@ uint32 ulCurrentTemperature = 0;
 //****************************** Local Functions *******************************
 
 //******************************.FUNCTION_HEADER.*******************************
-//Purpose	: 
+//Purpose	: To create thread for temperature monitoring and alarm manager
 //Inputs	: None
 //Outputs	: None
 //Return	: Return 0 at time of successful execution
@@ -43,7 +40,7 @@ int main()
 		temperatureMonitoringCreateThread();
 		alarmMangerCreateThread();
 	}
-	
+
 	return 0;
 }
 // EOF

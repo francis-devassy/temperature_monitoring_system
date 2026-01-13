@@ -3,7 +3,7 @@
 //  All Rights Reserved
 //******************************************************************************
 //
-// Summary	: 
+// Summary	: Handle thread to monitor temperature
 // Note		: None
 //
 //******************************************************************************
@@ -15,14 +15,10 @@
 #include "customTypes.h"
 
 //******************************* Global Types *********************************
-// typedef struct _TEMPERATURE_MONITORING_DATA_
-// {
-// 	uint32 ulDeviceVendor;
-// } TEMPERATURE_MONITORING_DATA;
 
 //***************************** Global Constants *******************************
 #define TEMPERATURE_MONITORING_SUCCESS		(0)
-#define TEMPERATURE_MONITORING_POLL_FREQ	(1)
+#define TEMPERATURE_MONITORING_POLL_FREQ	(10)
 #define TEMPERATURE_MONITORING_THRESHOLD	(60)
 
 //***************************** Global Variables *******************************

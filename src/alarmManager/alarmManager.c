@@ -4,8 +4,9 @@
 //******************************************************************************
 //
 // File		: alarmManager.c
-// Summary	: 
-// Note		: 
+// Summary	: Handles alarm on off control based on temperature threshold
+//			  comparison status
+// Note		: None
 // Author	: Francis V D
 // Date		: 01-January-2026
 //
@@ -33,17 +34,13 @@
 //Purpose	: Turn off alarm
 //Inputs	: None
 //Outputs	: None
-//Return	: bool blReturn, true at time of successful execution
-//Return	: bool blReturn, in case of an error
+//Return	: None
+//Return	: None
 //Notes		: None
 //******************************************************************************
-static bool alarmManagerAlarmOff(void)
+static void alarmManagerAlarmOff(void)
 {
-	bool blReturn = false;
 	printf("\nAlarm off");
-	blReturn = true;
-
-	return blReturn;
 }
 
 //******************************.FUNCTION_HEADER.*******************************
@@ -61,11 +58,11 @@ static bool alarmManagerAlarmOn(uint8 ucAlarmOnTime)
 {
 	bool blReturn = false;
 
-	if(ucAlarmOnTime >= 0)
+	if(ucAlarmOnTime > ALARM_MANAGER_ON_DISABLED)
 	{
 		printf("\nAlarm on");
 		blReturn = sleep(ucAlarmOnTime);
-		
+
 		if(blReturn != 0)
 		{
 			printf("\nError in alarm on wait duration");
@@ -75,7 +72,6 @@ static bool alarmManagerAlarmOn(uint8 ucAlarmOnTime)
 			blReturn = true;
 		}
 		alarmManagerAlarmOff();
-		
 	}
 	else
 	{
@@ -86,7 +82,7 @@ static bool alarmManagerAlarmOn(uint8 ucAlarmOnTime)
 }
 
 //******************************.FUNCTION_HEADER.*******************************
-//Purpose	: Comapres the temparature value with threshold
+//Purpose	: Compares the temparature value with threshold
 //Inputs	: uint32 ulTemperatureValue, the temperature value which is to be 
 //				compared with the threshold
 //Inputs	: uint32 ulThresholdValue, the temperature threshold level
@@ -119,19 +115,18 @@ static bool alarmManagerCompareData(uint32 ulTemperatureValue,
 	return blReturn;
 }
 
-//****************************** Local Functions *******************************
-
 //******************************.FUNCTION_HEADER.*******************************
 //Purpose	: Read updated temperature data from shared memory
 //Inputs	: None
 //Outputs	: None
 //Return	: uint32 ulTemperature, updated temperature data read 
-//				from shared memory
+//			  from shared memory
 //Notes		: None
 //******************************************************************************
 static uint32 alarmManagerReadData(void)
 {
 	uint32 ulTemperature = 0;
+
 	ulTemperature = ulCurrentTemperature;
 
 	return ulTemperature;
@@ -139,9 +134,9 @@ static uint32 alarmManagerReadData(void)
 
 //******************************.FUNCTION_HEADER.*******************************
 //Purpose	: Thread to read temperature every p second
-//Inputs	: None
+//Inputs	: void *pArg, pointer to thread arguments
 //Outputs	: None
-//Return	: 
+//Return	: None
 //Notes		: None
 //******************************************************************************
 static void* alarmMangerThread(void  *pArg)
@@ -158,7 +153,7 @@ static void* alarmMangerThread(void  *pArg)
 		{
 			blReturn = alarmManagerCompareData(ulTemperature,
 									TEMPERATURE_MONITORING_THRESHOLD);
-			
+
 			if(blReturn == true)
 			{
 				blReturn = alarmManagerAlarmOn(ALARM_MANAGER_ON_TIME);
@@ -186,9 +181,10 @@ bool alarmMangerCreateThread(void)
 {
 	bool blReturn = false;
 	pthread_t ulalarmManager = 0;
+
 	blReturn = pthread_create(&ulalarmManager, NULL,
 				alarmMangerThread, NULL);
-	
+
 	if(blReturn == ALARM_MANAGER_SUCCESS)
 	{
 		blReturn = pthread_detach(ulalarmManager);
